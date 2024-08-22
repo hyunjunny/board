@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>동보게시판</title>
+	<!-- css -->
+	<link rel="stylesheet" type="text/css" href="/css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="/css/index.css" />
+	<link rel="stylesheet" type="text/css" href="/css/sweetalert2.min.css" />
+	<!-- js -->
+	<script type="text/javascript" src="/jquery/jquery-3.7.1.min.js"></script>
+	<script type="text/javascript" src="/jquery/sweetalert2.all.min.js"></script>
+	<script type="text/javascript" src="/js/jwt.js"></script>
+	<script type="text/javascript" src="/js/index.js"></script>
+	<script th:inline="javascript">
+		var boardId = [[${boardId}]];
+		var viewSize = [[${viewSize}]];
+		var photoUrl = [[${photoUrl}]];
+	</script>
+	<script type="text/javascript">
+		var token = "";
+		var jwt = "";
+		var userId = "";
+
+		var page = 0;
+		var size = viewSize;
+		var lastContentFlag = 0;
+		var mobileDevice = true;
+    	var originalSize = $(window).width() + $(window).height();
+	</script>
+</head>
+<body>
+	<header style="border-bottom:1px solid #eee;width:100%;background-color:white;">
+		<h2 style="text-align:center;padding:5px;">게시판<span style="float:right;"><img src="/img/refresh.png" alt="새로고침" onclick="javascript:window.open('/');" width="20px" height="20px"/></span></h2>
+		<nav id="boardNav" style="text-align:left;padding:5px;">
+		</nav>
+	</header>
+	<div id="container" style="overflow:auto;"></div>
+	<div id="write" style="position:fixed;top:90%;right:5%;z-index:2;"><a href="javascript:goWrite();"><img src="/img/pencil.png" alt="글쓰기" width="50px" height="50px" style="border-radius: 25px;"/></a></div>
+	<div id="contentReply" class="popupArea">
+		<div class="replyHeader">
+			<span class="replyClose"><img src="/img/close.png" alt="닫기" class="replyClose" width="20px" height="20px"/></span>
+		</div>
+		<div class="replyList"></div>
+		<div class="replyUpload">
+			<p><input type="text" class="replyInput" value="" /><img src="/img/submit.png" alt="등록" class="replyBtn" onclick="javascript:setReply();"/></p>
+		</div>
+	</div>
+	<div id="contentFunction" class="popupArea">
+		<div class="functionHeader">
+			<span class="functionClose"><img src="/img/close.png" alt="닫기" class="functionClose" width="20px" height="20px"/></span>
+		</div>
+		<div class="functionList" style="padding: 10px; border-radius: 10px; background-color: #666;">
+			<p class="modify" style="border-bottom: 1px solid #858589; padding: 10px;"><img src="/img/edit.png" alt="수정" width="17px" height="20px" style="margin-right:10px; vertical-align: middle;"/>수 정</p>
+			<p class="delete" style="padding: 10px; color:red;"><img src="/img/trash.png" alt="삭제" width="17px" height="20px" style="margin-right:10px; vertical-align: middle;"/><strong>삭 제</strong></p>
+		</div>
+	</div>
+	<div id="detailContent" style="display:none; position: absolute;top: 0;left: 100%;z-index:4;width:100%;height:100%;background-color: #fff;">
+	</div>
+	<div class="bigPictureWrapper">
+		<p class="bigPictureClose"><img src="/img/close.png" alt="닫기" width="20px" height="20px"/></p>
+		<div class="bigPicture">
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.ultari.board.repository.mapper.OrgMapper">
+    <!--<select id="getUserInfo" resultType="java.util.Map">
+        <![CDATA[
+            SELECT USER_NAME AS username, POS_NAME AS posname, USER_HIGH AS userhigh
+            FROM MSGPSS.MSG_USER WHERE USER_ID = #{userId}
+        ]]>
+    </select>-->
+    <select id="getUserInfo" resultType="java.util.Map">
+        SELECT A.USER_NAME AS username
+            , A.POS_NAME AS posname
+            , A.USER_HIGH AS userhigh
+            , IFNULL(B.USER_ID,A.USER_ID) AS userid
+        FROM MSGPSS.MSG_USER A
+        LEFT OUTER JOIN MSGPSS.msg_login B ON A.USER_ID = B.LOGIN_ID
+        WHERE A.USER_ID = #{userId}
+    </select>
+    <select id="checkLogin" resultType="java.util.Map">
+        <![CDATA[
+            SELECT LOGIN_ID AS userid FROM MSGPSS.MSG_LOGIN WHERE USER_ID = #{userId}
+        ]]>
+    </select>
+    <select id="getAllUserInfo" resultMap="userMap">
+        <![CDATA[
+		SELECT USER_ID FROM MSGPSS.MSG_LOGIN
+	]]>
+    </select>
+    <select id="getUserInfoListByBoardId" resultMap="userMap">
+        <![CDATA[
+        select A.USER_ID
+            , B.USER_NAME
+            , B.USER_HIGH
+            , B.POS_NAME
+            , B.USER_ORDER
+            , C.PART_NAME
+        from MSG_BOARD_USER A
+        LEFT OUTER JOIN MSGPSS.MSG_USER B ON A.USER_ID=B.USER_ID
+        LEFT OUTER JOIN MSGPSS.MSG_PART C ON B.USER_HIGH=C.PART_ID
+        where A.BOARD_ID=#{boardId}
+        ORDER BY CONVERT(B.USER_ORDER,int)
+        ]]>
+    </select>
+    <select id="subOrganizationDept" resultMap="deptMap">
+        SELECT PART_ID AS DEPT_ID
+            , PART_HIGH AS DEPT_HIGH
+            , PART_NAME AS DEPT_NAME
+            , PART_ORDER AS DEPT_ORDER
+        FROM MSGPSS.MSG_PART
+        WHERE PART_HIGH = #{deptId}
+        ORDER BY CONVERT(PART_ORDER,int)
+    </select>
+    <select id="subOrganizationUser" resultMap="userMap">
+        SELECT A.USER_ID
+            , A.USER_NAME
+            , A.USER_HIGH
+            , A.POS_NAME
+            , A.USER_ORDER
+            , B.PART_NAME
+        FROM MSGPSS.MSG_USER A
+        LEFT OUTER JOIN MSGPSS.MSG_PART B ON A.USER_HIGH = B.PART_ID
+        WHERE USER_HIGH = #{deptId}
+        ORDER BY CONVERT(A.USER_ORDER,int)
+    </select>
+    <select id="subContentUserOrganization" resultMap="userMap">
+        SELECT A.USER_ID
+            , A.USER_HIGH
+            , A.USER_NAME
+            , A.POS_NAME
+            , A.USER_ORDER
+            , C.PART_NAME
+        FROM MSGPSS.MSG_USER A
+        INNER JOIN MSG_CONTENT_USER B ON A.USER_ID=B.user_id
+        LEFT JOIN MSGPSS.MSG_PART C ON A.USER_HIGH=C.PART_ID
+        WHERE A.USER_HIGH = #{deptId} AND B.content_id = #{contentId}
+    </select>
+    <resultMap id="userMap" type="Map">
+        <id column="USER_ID" property="userId"/>
+        <result column="USER_HIGH" property="deptId"/>
+        <result column="USER_NAME" property="userName"/>
+        <result column="POS_NAME" property="posName"/>
+        <result column="USER_ORDER" property="userOrder"/>
+        <result column="PART_NAME" property="deptName"/>
+    </resultMap>
+    <resultMap id="deptMap" type="Map">
+        <id column="DEPT_ID" property="deptId"/>
+        <result column="DEPT_HIGH" property="deptHigh"/>
+        <result column="DEPT_NAME" property="deptName"/>
+        <result column="DEPT_ORDER" property="deptOrder"/>
+    </resultMap>
+    <select id="getReadUserList" resultMap="readUserMap">
+        select USER_ID
+            , USER_HIGH
+            , USER_NAME
+            , POS_NAME
+            , BOARD_ID
+            , FLAG
+            , LPAD(USER_ORDER,6,'0') AS USER_ORDER
+        FROM
+        (
+        SELECT IFNULL(E.USER_ID,A.USER_ID) AS USER_ID, A.USER_HIGH, A.USER_NAME, A.POS_NAME, B.BOARD_ID, '0' as FLAG, A.USER_ORDER
+        FROM MSGPSS.MSG_USER A
+        LEFT OUTER JOIN MSG_BOARD_USER B ON A.USER_ID=B.USER_ID
+        LEFT OUTER JOIN MSGPSS.MSG_LOGIN E ON A.USER_ID=E.LOGIN_ID
+        <where>
+            <if test="boardId != null">AND B.BOARD_ID=#{boardId}</if>
+            <if test="contentId != null">AND A.USER_ID NOT IN (SELECT USER_ID from MSG_CONTENT_USER WHERE CONTENT_ID=#{contentId})</if>
+        </where>
+        UNION
+        SELECT IFNULL(F.USER_ID,C.USER_ID) AS USER_ID, C.USER_HIGH, C.USER_NAME, C.POS_NAME, D.BOARD_ID, '1' AS FLAG, C.USER_ORDER
+        FROM MSGPSS.MSG_USER C
+        LEFT OUTER JOIN MSG_CONTENT_USER D ON C.USER_ID=D.USER_ID
+        LEFT OUTER JOIN MSGPSS.MSG_LOGIN F ON C.USER_ID=F.LOGIN_ID
+        WHERE D.CONTENT_ID=#{contentId}
+        ) TMP
+        <where>
+            <if test="deptId != null">AND TMP.USER_HIGH=#{deptId}</if>
+        </where>
+        ORDER BY LPAD(USER_ORDER,6,'0')
+    </select>
+    <resultMap id="readUserMap" type="Map">
+        <id column="USER_ID" property="userId"/>
+        <result column="USER_HIGH" property="deptId"/>
+        <result column="USER_NAME" property="userName"/>
+        <result column="POS_NAME" property="posName"/>
+        <result column="BOARD_ID" property="boardId"/>
+        <result column="FLAG" property="flag"/>
+        <result column="USER_ORDER" property="userOrder"/>
+    </resultMap>
+    <select id="getOrgDepth" resultMap="deptMap">
+        WITH RECURSIVE ORG_LIST (PART_ID, PART_HIGH, PART_NAME, PART_ORDER, DEPTH)
+        AS (
+            SELECT PART_ID, PART_HIGH, PART_NAME, PART_ORDER, 0
+            FROM MSGPSS.msg_part
+            WHERE PART_ID=#{userHigh}
+            UNION ALL
+            SELECT t.PART_ID, t.PART_HIGH, t.PART_NAME, t.PART_ORDER, tp.DEPTH+1
+            FROM MSGPSS.msg_part t
+            INNER JOIN ORG_LIST tp ON t.PART_ID = tp.PART_HIGH
+        )
+        SELECT PART_ID AS DEPT_ID, PART_HIGH AS DEPT_HIGH, PART_NAME AS DEPT_NAME, CONVERT(DEPTH,char) AS DEPT_ORDER
+        FROM ORG_LIST
+        ORDER BY DEPTH DESC
+    </select>
+    <select id="getReadDeptList" resultMap="deptMap">
+        SELECT PART_ID AS DEPT_ID, PART_HIGH AS DEPT_HIGH, PART_NAME AS DEPT_NAME, PART_ORDER AS DEPT_ORDER FROM MSGPSS.msg_part WHERE PART_HIGH=#{deptId}
+    </select>
+    <select id="getRecvCount" resultMap="countMap">
+        SELECT COUNT_NAME, COUNT FROM (
+        SELECT 'total' AS COUNT_NAME, COUNT(*) AS COUNT FROM msg_board_user WHERE board_id=#{boardId}
+        UNION
+        SELECT 'read' AS COUNT_NAME, COUNT(*) AS COUNT FROM msg_content_user WHERE content_id=#{contentId}) tmp
+    </select>
+    <resultMap id="countMap" type="Map">
+        <id column="COUNT_NAME" property="countName"/>
+        <result column="COUNT" property="count"/>
+    </resultMap>
+</mapper>

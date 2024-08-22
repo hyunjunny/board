@@ -1,0 +1,43 @@
+#boardAdmin {
+    cursor: pointer;
+    background-color: #eee;
+}
+#boardAdmin:hover {
+    color: red;
+}
+
+#authAdmin {
+    cursor: pointer;
+    background-color: #eee;
+}
+#authAdmin:hover {
+    color: red;
+}
+
+form > table {
+    width: 100%;
+    text-align: center;
+}
+
+form > table > thead {
+    border-bottom : 1px solid #eee;
+}
+tr {
+    margin-bottom: 5px;
+}
+
+tr:hover {
+    background-color: #efefef;
+}
+
+tr.on {
+    background-color: #a5a5a5;
+}
+
+th, td {
+    padding: 3px;
+}
+
+#boardContainer {
+    padding: 10px;
+}

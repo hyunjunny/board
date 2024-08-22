@@ -1,0 +1,37 @@
+@charset "utf-8";
+
+/* common */
+html,body,div,span,applet,object,iframe,h1,h2,h3, h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,dialog,figcaption,figure,footer,header,hgroup,menu,nav,section,summary,time,mark,audio,video {
+ margin: 0; padding: 0; border: 0; outline: 0; font-size: 100%; vertical-align: baseline;}
+article,aside,details,dialog,figcaption,figure,footer,header,hgroup,menu,nav,section {display: block;}
+ol,ul,li {list-style: none}
+blockquote,q {quotes: none}
+blockquote:before,blockquote:after,q:before,q:after  {content: ''; content: none;}
+ins {background-color: #ff9; color: #000; text-decoration: none;}
+del {text-decoration: line-through;}
+table {border-collapse: collapse; border-spacing: 0;}
+abbr[title], dfn[title] {border-bottom:1px dotted #000; cursor: help}
+hr {display: block; height: 1px; border: 0; border-top: 1px solid #c7c7c7; margin: 1em 0; padding: 0;}
+*{margin:0; padding:0; }
+li{list-style:none;}
+img {border:0 none;vertical-align:middle;}
+.hidden {width: 0;height: 0;overflow: hidden;background: none;font-size: 0;text-indent: -9999px;color: transparent;opacity: 0;line-height: 0;}
+form {min-width: auto;}
+input[type="image"] {border:0 none;}
+button, input[type="submit"] {cursor: pointer; border:0 none;}
+button::-moz-focus-inner {border: 0 none; padding: 0;}
+button, input, textarea, select, a {outline: none;}
+body {background-color:#fff; word-wrap:break-word; word-break:keep-all; zoom:1; -webkit-text-size-adjust: 100%;box-sizing: border-box;font-family : 'Arial','sans-serif', 'gulim', 'gothic';}
+body,html {position:relative; height:100%;}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+/* ::selection { background: transparent; }
+::-moz-selection { background: transparent; } */
+img {width: auto;max-width: 100%;}
+body,html{
+    overflow-x: hidden;
+}
+#container > section, #detailContent > section {
+    touch-action: pan-x pan-y;
+}

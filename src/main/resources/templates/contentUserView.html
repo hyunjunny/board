@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>게시글읽음확인</title>
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="/css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="/css/contentUserView.css" />
+    <!-- js -->
+    <script type="text/javascript" src="/jquery/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="/js/contentUserView.js"></script>
+    <script th:inline="javascript">
+        var userId = "";
+        var boardId = [[${boardId}]];
+        var photoUrl = [[${photoUrl}]];
+        var photoId = [[${photoId}]];
+        var contentId = [[${contentId}]];
+        var userData = JSON.parse([[${userData}]]);
+        var deptData = JSON.parse([[${deptData}]]);
+        var orgDepth = JSON.parse([[${orgDepth}]]);
+    </script>
+</head>
+<body>
+    <div style="float:left;text-align:center;width:100%;height:6%;padding:5px 10px;">
+        <span style="float:left;width:70px;border-radius:15px;background-color:#0045a7;color:white;padding:3px 1px;font-size:15px;" onclick="javascript:history.back(-1)">이전</span>
+        <h2 style="margin-right:80px;">수신확인 <span th:text="${recvCount}"></span></h2>
+    </div>
+    <div id="container">
+        <div id="container_left">
+            <div style="border-bottom:1px solid #ddd;padding-bottom:20px;" onclick="javascript:goUserInfo();">
+                <p style="margin-bottom:10px;"><img id="myPhoto" src="" alt="사용자사진" style="border-radius:30px;"/></p>
+                <p><span th:text="${userName}"></span> <span th:text="${posName}"></span></p>
+            </div>
+            <div id="orgDepthList" style="padding-top:20px;">
+            </div>
+        </div>
+        <div id="container_right">
+            <div id="org">
+                <p style="color:#666;font-size:14px;">부서 <span id="orgCount"></span></p>
+                <div id="orgList"></div>
+            </div>
+            <div id="user">
+                <p style="color:#666;font-size:14px;">유저 <span id="userCount"></span></p>
+                <div id="userList"></div>
+            </div>
+        </div>
+    </div>
+    <div id="parentDepth"><a href="javascript:goParentDepth();"><img src="/img/arrow-up.png" alt="상위부서로이동" width="50px" height="50px" style="border-radius: 25px;"/></a></div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.ultari.board.repository.mapper.AlarmMapper">
+    <insert id="saveAlarm" parameterType="String">
+        INSERT INTO msg_board_noti (BOARD_ID, CONTENT_ID, USER_ID) VALUES(#{boardId},#{contentId},#{userId})
+    </insert>
+    <update id="updateCountAlarm" parameterType="String">
+    <![CDATA[
+        UPDATE msg_board_noti SET COUNT = COUNT + 1 WHERE CONTENT_ID=#{contentId} AND USER_ID=#{userId}
+    ]]>
+    </update>
+    <update id="updateSendYN" parameterType="String">
+    <![CDATA[
+        UPDATE msg_board_noti SET SEND_YN = #{flag} where CONTENT_ID=#{contentId} AND USER_ID=#{userId}
+    ]]>
+    </update>
+    <select id="selectAlarm" parameterType="int" resultMap="alarmMap">
+        <![CDATA[
+            SELECT a.BOARD_ID AS BOARD_ID
+                ,a.content_id AS CONTENT_ID
+                ,a.user_id AS USER_ID
+                , b.user_id AS READ_USER_ID
+                , a.count AS COUNT
+                , d.user_name AS USER_NAME
+                , a.noti_title AS NOTI_TITLE
+                , a.noti_content AS NOTI_CONTENT
+                , a.link_url AS LINK_URL
+            from MSG_BOARD_NOTI a
+            left outer join MSG_CONTENT_USER b on a.user_id = b.user_id and a.content_id = b.content_id
+            left outer join MSG_CONTENT c on a.content_id = c.content_id
+            left outer join MSGPSS.MSG_USER d on c.user_id = d.user_id
+            where a.count <= #{maxCount} and b.user_id is NULL and a.SEND_YN='N'
+            AND (DATE_FORMAT(a.REGIST_DATE,'%Y%m%d%H%i') = DATE_FORMAT(NOW() - INTERVAL #{intervalMin} MINUTE,'%Y%m%d%H%i'))
+        ]]>
+    </select>
+    <resultMap id="alarmMap" type="Map">
+        <id column="BOARD_ID" property="boardId"/>
+        <id column="CONTENT_ID" property="contentId"/>
+        <id column="USER_ID" property="userId"/>
+        <result column="READ_USER_ID" property="readUserId"/>
+        <result column="COUNT" property="count"/>
+        <result column="USER_NAME" property="userName"/>
+        <result column="NOTI_TITLE" property="notiTitle"/>
+        <result column="NOTI_CONTENT" property="notiContent"/>
+        <result column="LINK_URL" property="linkUrl"/>
+    </resultMap>
+    <delete id="removeAlarm" parameterType="String">
+        <![CDATA[
+            DELETE FROM msg_board_noti WHERE content_id=#{contentId}
+        ]]>
+    </delete>
+    <delete id="deleteCron" parameterType="String">
+        <![CDATA[
+            DELETE FROM msg_board_noti WHERE regist_date < #{date}
+        ]]>
+    </delete>
+    <select id="selectUUID" resultType="java.util.Map">
+        <![CDATA[
+            SELECT USER_ID AS userId, LOGIN_ID AS loginId FROM MSGPSS.MSG_LOGIN where LOGIN_ID = #{userId}
+        ]]>
+    </select>
+</mapper>

@@ -1,0 +1,226 @@
+body{
+    overflow: hidden;
+}
+#container{
+    height: 94%;
+}
+
+#boardNav {
+    width: 100%;
+    height: 5%;
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
+#boardNav > span {
+    margin: 0 5px;
+}
+
+#boardNav > .on {
+    border-bottom: 2px solid #0045a7;
+}
+
+#container > section {
+    /*padding: 5px;*/
+    /*border-bottom:10px solid #eee;*/
+}
+
+#container > section > .userdata {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/*#container > section > .userdata > p > span {
+    font-size: 10px;
+    color: #111;
+}*/
+
+#container > section > .userdata > span > .regDate {
+    font-size: 10px;
+    color: #111;
+}
+
+
+#container > section > .contentdata {
+    padding: 1px;
+    border-bottom: 1px solid #eee;
+    min-height: 300px;
+    max-height: 300px;
+    overflow: hidden;
+    position: relative;
+}
+
+#container > section > .contentdata > p {
+    padding: 0 5px;
+}
+
+#container > section > .contentdata > p > img {
+    max-width: 70%;
+}
+
+#container > section > .contentdata > .moreBtn {
+    color: #fff;
+    text-align: center;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 300px;
+    width: 100%;
+    /*background-color: #e3e3e3;*/
+    background: linear-gradient(to right, #eee, #ccc);
+    font-size: 25px;
+    z-index: 1;
+}
+
+#container > section > .contentdata > .moreBtn img {
+    margin-top: 30px;
+}
+
+#container > section > .contentdata > .etcBtn {
+    position: absolute;
+    top: 250px;
+    background-color: white;
+    border-top: 1px solid #eee;
+    padding: 10px;
+    width: 100%;
+    height: 50px;
+    box-shadow: 0px -4px 5px #eee;
+}
+
+#container > section > .contentdata > .etcBtn > p > span {
+    margin-left: 10px;
+}
+
+#container > section > .contentdata > .etcBtn > p.float_left {
+    text-align: left;
+    float: left;
+}
+
+#container > section > .contentdata > .etcBtn > p.float_right {
+    text-align:right;
+    float: right;
+}
+
+#container > section > .contentdata > .etcBtn > p.replyArea {
+    float: left;
+}
+
+#contentReply {
+    display: none;
+    padding: 10px;
+    color: #eee;
+    width: 100%;
+    height: 50%;
+    border-radius: 10px 10px 0 0;
+    background-color: rgba(54,54,54,0.9);
+    z-index: 5;
+}
+
+#contentReply > .replyHeader {
+    margin-bottom: 10px;
+    height: 20px;
+}
+
+#contentReply > .replyHeader > .replyClose {
+    float: right;
+}
+
+#contentReply > .replyList {
+    overflow-y: auto;
+    white-space: nowrap;
+    height: 75%;
+}
+
+#contentReply > .replyList li {
+    margin-bottom: 5px;
+}
+
+#contentReply > .replyList li > p {
+    white-space: break-spaces;
+    padding-left: 30px;
+}
+
+#contentReply > .replyUpload {
+    width: 100%;
+}
+
+#contentReply > .replyUpload .replyInput {
+    height: 30px;
+    vertical-align: middle;
+    width: 92%;
+    font-size: 15px;
+}
+
+#contentReply > .replyUpload  .replyBtn{
+    width: 8%;
+    max-width: 30px;
+    vertical-align: middle;
+}
+
+.favoriteArea {
+    width: 75px;
+    padding: 5px;
+    border-radius: 15px;
+    background-color: #eee;
+}
+
+.replyArea {
+    width: 75px;
+    padding: 5px;
+    border-radius: 15px;
+    background-color: #eee;
+}
+
+
+#contentFunction {
+    display: none;
+    padding: 10px;
+    color: #eee;
+    width: 100%;
+    height: 30%;
+    border-radius: 10px 10px 0 0;
+    background-color: rgba(54,54,54,0.9);
+    z-index: 5;
+}
+
+#contentFunction > .functionHeader {
+    margin-bottom: 20px;
+    height: 20px;
+}
+
+#contentFunction > .functionHeader > .functionClose {
+    float: right;
+}
+
+#detailContent {
+    overflow: auto;
+}
+
+#detailContent > section > .contentdata {
+    min-height: 300px;
+    padding: 5px;
+}
+
+#detailContent > section > .contentdata > .etcBtn {
+    background-color: white;
+    border-top: 1px solid #eee;
+    padding: 10px;
+    width: 100%;
+    height: 50px;
+}
+
+#detailContent > section > .contentdata > .etcBtn > p > span {
+    margin-left: 10px;
+}
+
+#detailContent > section > .contentdata > .etcBtn > p.float_left {
+    text-align: left;
+}
+
+#detailContent > section > .contentdata > .etcBtn > p.float_right {
+    text-align: right;
+}
+
+#detailContent > section > .contentdata > .etcBtn > .replyArea {
+    float: left;
+}

@@ -1,0 +1,41 @@
+html, body {
+    touch-action: auto;
+    background:rgba(33,33,33);
+}
+
+.bigPictureWrapper {
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    top:0%;
+    width:100%;
+    height:100%;
+    z-index: 100;
+}
+
+.bigPicture {
+    position: relative;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bigPictureClose {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 50px;
+    height: 50px;
+    z-index: 1;
+}
+
+.bigPictureClose > img{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+
+.bigPicture img {
+    width: 90%;
+}

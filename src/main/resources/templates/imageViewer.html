@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0, minimum-scale=1.0, user-scalable=yes" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>동보게시판</title>
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="/css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="/css/imageViewer.css" />
+    <!-- js -->
+    <script type="text/javascript" src="/jquery/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="/js/imageViewer.js"></script>
+    <script type="text/javascript">
+
+    </script>
+</head>
+<body>
+<div class="bigPictureWrapper">
+    <p class="bigPictureClose" onclick="javascript:hideBigPicture()"><img src="/img/close.png" alt="닫기" width="20px" height="20px"/></p>
+    <div class="bigPicture">
+        <img id="contentImg" th:src="${img}"/>
+    </div>
+</div>
+</body>
+</html>

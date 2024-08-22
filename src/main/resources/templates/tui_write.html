@@ -1,0 +1,164 @@
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1, shrink-to-fit=no" />
+    <title>글쓰기 페이지</title>
+
+    <!-- TUI 에디터 CSS CDN -->
+    <link rel="stylesheet" href="/css/toastui-editor.min.css" />
+    <link rel="stylesheet" href="/css/write.css" />
+    <link rel="stylesheet" type="text/css" href="/css/sweetalert2.min.css" />
+    <style>
+        .toastui-editor-contents {
+            font-size: 16px;
+        }
+        .toastui-editor-defaultUI-toolbar {
+            padding: 0px;
+        }
+    </style>
+    <script type="text/javascript" src="/jquery/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="/jquery/sweetalert2.all.min.js"></script>
+    <script type="text/javascript" src="/js/write.js"></script>
+	<script type="text/javascript">
+        var userId = "";
+        var boardId = "[[${boardId}]]";
+        var contentId = "[[${contentId}]]";
+        var registDate = "[[${registDate}]]";
+        var modifyContent = "[[${modifyContent}]]";
+
+        var mobileDevice = true;
+
+        $(document).ready(function(){
+
+            $(".toastui-editor-defaultUI-toolbar").append($("#pushToggle"));
+
+            if(modifyContent == "1") $("#pushToggle").hide();
+
+			if(mobileDevice) PSS.getToken();
+
+			$(".image").on("click",function(){
+			    $(".toastui-editor-tabs").hide();
+			    $("label[for = 'toastuiAltTextInput' ]").hide();
+			    $("#toastuiAltTextInput").hide();
+			});
+
+            $(".link").on("click",function(){
+                $("#toastuiLinkTextInput").hide();
+                $("#toastuiLinkUrlInput").val("https://");
+                $("#toastuiLinkUrlInput").change(function(){
+                    $("#toastuiLinkTextInput").val($("#toastuiLinkUrlInput").val());
+                    //$("#toastuiLinkTextInput").attr("onfocus","this.select()");
+                });
+            });
+
+            if(contentId != "") {
+                $("#loadingBar").show();
+                setTimeout(() => getContent(boardId,contentId,userId), 2000);
+            }
+
+            checkMobile();
+		});
+
+        function checkMobile() {
+            if( ['Win16','Win32','Win64','Mac','MacIntel','iPhone'].find(element => element == navigator.platform) ) {
+                mobileDevice=false;
+            } else {
+                mobileDevice=true;
+            }
+        }
+	</script>
+</head>
+<body>
+    <h2 style="text-align: center;">
+        <span style="float:left;width:70px;border-radius:15px;background-color:#0045a7;color:white;padding:3px 1px;font-size:15px;/*box-shadow: 0px 3px 5px #666;*/" onclick="javascript:goBack();">이전</span>
+        글쓰기
+        <span style="float:right;width:70px;border-radius:15px;background-color:#0045a7;color:white;padding:3px 1px;font-size:15px;/*box-shadow: 0px 3px 5px #666;*/" onclick="javascript:goSave();">등록</span>
+    </h2>
+    <div id="pushToggle" style="height:25px;position:absolute;top:13px;right:5px;">
+        <span style="float:left;vertical-align:middle;">동보 알림</span>
+        <span style="float:right;">
+            <input type="checkbox" id="pushChk" hidden>
+            <label for="pushChk" class="toggleSwitch">
+                <span class="toggleButton"></span>
+            </label>
+        </span>
+    </div>
+
+    <!-- 에디터를 적용할 요소 (컨테이너) -->
+    <div id="content">
+
+    </div>
+
+    <!-- TUI 에디터 JS CDN -->
+    <script src="/js/toastui-editor-all.min.js"></script>
+    <script>
+        const editor = new toastui.Editor({
+            el: document.querySelector("#content"),
+            height: "90%",
+            initialEditType: "wysiwyg",
+            initialValue: "",
+            previewStyle: "vertical",
+            placeholder: "내용을 입력해 주세요.",
+			hideModeSwitch : true,
+			language : "ko-KR",
+			toolbarItems: [
+                ["bold", "italic"],
+                ["image", "link"],
+                [],
+		    ],
+		    /* start of hooks */
+            hooks: {
+                async addImageBlobHook(blob, callback) {
+                    try {
+                        $("#loadingBar").show();
+                        const formData = new FormData();
+                        formData.append("image", blob);
+
+                        //const response = await fetch("/tui-editor/image-upload", {
+                        //    method : "POST",
+                        //    body : formData
+                        //});
+
+                        $.ajax({
+                            url: "/tui-editor/image-upload",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization","BEARER " + token);
+                            },
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            processData: false
+                        }).done(function(data){
+                            $("#loadingBar").hide();
+                            if(data == "") {
+                                Swal.fire({
+                                    title: "사진파일이 아닙니다.",
+                                    confirmButtonColor: "#002bff",
+                                    confirmButtonText: "닫기"
+                                });
+                            }
+                            const imageUrl = "/tui-editor/image-print?filename="+data;
+                            callback(imageUrl, "image alt attribute");
+                        });
+
+                    } catch (error) {
+                        console.error("업로드 실패 : ", error);
+                        alert("50MB 이상의 이미지는 업로드가 불가합니다.");
+                    } /*finally {
+                        $("#loadingBar").hide();
+                    }*/
+                }
+            }
+            /* end of hooks */
+        });
+    </script>
+    <script type="text/javascript" src="/js/ko-kr.js"></script>
+    <!-- loadingBar -->
+    <div id="loadingBar" style="display:none;">
+        <p>
+            <img id="loading-image" src="/img/loading.gif" alt="loading.." width="50px;" height="50px;"/>
+        </p>
+    </div>
+    <!-- //loadingBar -->
+</body>
+</html>

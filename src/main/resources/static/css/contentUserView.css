@@ -1,0 +1,31 @@
+body{
+    overflow:hidden;
+}
+#container{
+    height:95%;
+}
+
+#container_left {
+    float:left;
+    width:35%;
+    height:100%;
+    overflow:auto;
+    background-color:#efefef;
+    padding:3%;
+    text-align:center;
+}
+
+#container_right {
+    float:right;
+    width:65%;
+    height:100%;
+    overflow:auto;
+    padding:5px;
+}
+
+#parentDepth {
+    position:fixed;
+    top:90%;
+    right:5%;
+    z-index:2;
+}
