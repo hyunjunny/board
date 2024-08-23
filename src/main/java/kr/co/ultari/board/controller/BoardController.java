@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -91,6 +92,7 @@ public class BoardController {
 
     @RequestMapping("getcontentlist")
     @ResponseBody
+    @Cacheable(value = "CONTENT")
     public String getContentList(final HttpServletResponse response, final HttpServletRequest request, @RequestParam String boardId, Pageable pageable){
         log.debug(boardId);
         JSONObject json = new JSONObject();

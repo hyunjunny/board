@@ -46,6 +46,9 @@ public class BoardService {
     @Autowired
     AlarmMapper alarmMapper;
 
+    @Autowired
+    ConetnetCachedService cachedService;
+
     @Value("${ultari.board.alarm.use:false}")
     boolean alarmUse;
 
@@ -112,6 +115,7 @@ public class BoardService {
         JSONArray arr = new JSONArray();
 
         List<Content> list = contentRepository.findByBoardIdOrderByRegistDateDesc(boardId, pageable);
+        //List<Content> list = cachedService.findByBoardIdOrderByRegistDateDesc(boardId, pageable);
 
         for(Content content:list){
             JSONObject json = new JSONObject();
